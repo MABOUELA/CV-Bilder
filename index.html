@@ -15,15 +15,27 @@
     <script>
         async function generateLessons() {
             const story = document.getElementById("storyInput").value;
-            const response = await fetch("/summarize", {
-                method: "POST",
+            const apiKey = 'sk-proj-sVlxXIXq2r1iKa8mSI9nT3BlbkFJtmWPYjHaimwN4CZfaK63'; // Replace with your OpenAI API key
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
                 },
-                body: JSON.stringify({ story: story })
+                body: JSON.stringify({
+                    model: 'gpt-4',
+                    messages: [
+                        { role: 'system', content: 'You are an assistant that summarizes stories into lessons learned.' },
+                        { role: 'user', content: story }
+                    ],
+                    max_tokens: 150
+                })
             });
+
             const data = await response.json();
-            document.getElementById("lessonsOutput").innerText = data.lessons;
+            const lessons = data.choices[0].message.content.trim();
+            document.getElementById("lessonsOutput").innerText = lessons;
         }
     </script>
 </body>
