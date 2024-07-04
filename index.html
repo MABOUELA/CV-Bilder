@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Summarizer</title>
+</head>
+<body>
+    <h1>Story Summarizer</h1>
+    <textarea id="storyInput" rows="10" cols="50" placeholder="Write your short story here..."></textarea><br>
+    <button onclick="generateLessons()">Generate Lessons Learned</button>
+    <h2>Lessons Learned</h2>
+    <div id="lessonsOutput"></div>
+
+    <script>
+        async function generateLessons() {
+            const story = document.getElementById("storyInput").value;
+            const response = await fetch("/summarize", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ story: story })
+            });
+            const data = await response.json();
+            document.getElementById("lessonsOutput").innerText = data.lessons;
+        }
+    </script>
+</body>
+</html>
